@@ -1,0 +1,27 @@
+{
+  "name": "jurist-ai",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --exec npx tsx src/index.ts",
+    "dev:front": "cd frontend && npm run dev",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:front\"",
+    "start": "npx tsx src/index.ts"
+  },
+  "dependencies": {
+    "@types/mongoose": "^5.11.96",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1",
+    "mongoose": "^9.3.1",
+    "openai": "^4.104.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
