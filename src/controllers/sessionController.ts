@@ -1,7 +1,11 @@
 import { Request, Response } from 'express'
+import mongoose from 'mongoose'
 import Chat from '../models/Chat.js'
 
+const isDbConnected = () => mongoose.connection.readyState === 1
+
 export const getSessions = async (req: Request, res: Response) => {
+    if (!isDbConnected()) return res.json([])
     try {
         const sessions = await Chat.find()
             .select('title preview createdAt updatedAt')
@@ -14,6 +18,7 @@ export const getSessions = async (req: Request, res: Response) => {
 }
 
 export const getSession = async (req: Request, res: Response) => {
+    if (!isDbConnected()) return res.status(404).json({ message: 'Database not connected' })
     try {
         const chat = await Chat.findById(req.params.id)
         if (!chat) return res.status(404).json({ message: 'Chat not found' })
@@ -25,6 +30,7 @@ export const getSession = async (req: Request, res: Response) => {
 }
 
 export const createSession = async (req: Request, res: Response) => {
+    if (!isDbConnected()) return res.json({ _id: 'temp', title: req.body.title, messages: [], preview: '', updatedAt: new Date() })
     try {
         const { title, messages } = req.body
         const preview = messages?.[0]?.content?.substring(0, 60) || ''
@@ -37,6 +43,7 @@ export const createSession = async (req: Request, res: Response) => {
 }
 
 export const updateSession = async (req: Request, res: Response) => {
+    if (!isDbConnected()) return res.json({ message: 'No database' })
     try {
         const { messages, title } = req.body
         const update: Record<string, unknown> = {}
@@ -56,6 +63,7 @@ export const updateSession = async (req: Request, res: Response) => {
 }
 
 export const deleteSession = async (req: Request, res: Response) => {
+    if (!isDbConnected()) return res.json({ message: 'No database' })
     try {
         const chat = await Chat.findByIdAndDelete(req.params.id)
         if (!chat) return res.status(404).json({ message: 'Chat not found' })
