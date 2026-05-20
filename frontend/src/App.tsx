@@ -52,7 +52,8 @@ const App = () => {
         setMessages(updatedMessages); setIsLoading(true)
 
         try {
-            const d = await sendMessage(content)
+            const history = messages.map(m => ({ role: m.role, content: m.content }))
+            const d = await sendMessage(content, history)
             const botMsg: Message = { id: (Date.now()+1).toString(), role: 'assistant', content: d.reply, timestamp: new Date() }
             const allMessages = [...updatedMessages, botMsg]
             setMessages(allMessages)
